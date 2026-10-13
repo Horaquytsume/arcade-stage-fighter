@@ -272,8 +272,24 @@ def main():
                     if event.key == pygame.K_SPACE or event.key == pygame.K_j:
                         player.state = "attacking"
                         player.attack_frame = 0
+                        player_center_x = player.x + player.width / 2
                         for e in enemies[:]:
-                            if abs(player.x - e.x) < player.attack_range:
+                            enemy_center_x = e.x + e.width / 2
+                            distance_x = enemy_center_x - player_center_x
+                            in_front = (
+                                e.x + e.width > player_center_x
+                                if player.facing_right
+                                else e.x < player_center_x
+                            )
+                            vertical_overlap = (
+                                player.y < e.y + e.height
+                                and player.y + player.height > e.y
+                            )
+                            if (
+                                in_front
+                                and abs(distance_x) <= player.attack_range
+                                and vertical_overlap
+                            ):
                                 e.health -= player.damage
                                 if e.health <= 0:
                                     enemies.remove(e)
@@ -312,8 +328,14 @@ def main():
                     if player.health <= 0:
                         game_state = "gameover"
 
+            player_rect = pygame.Rect(
+                int(player.x), int(player.y), player.width, player.height
+            )
             for item in items:
-                if item.active and abs(player.x - item.x) < 30:
+                item_rect = pygame.Rect(
+                    int(item.x), int(item.y), item.width, item.height
+                )
+                if item.active and player_rect.colliderect(item_rect):
                     if item.item_type == "health":
                         player.health = min(player.max_health, player.health + 50)
                     item.active = False
