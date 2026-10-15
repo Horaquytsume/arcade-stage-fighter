@@ -2,6 +2,8 @@ import random
 import math
 import sys
 
+import pygame
+
 try:
     pygame.init()
     pygame.font.init()
@@ -262,6 +264,7 @@ def main():
                     if event.key == pygame.K_RETURN:
                         player = Player(selected_char, selected_team)
                         current_stage = 1
+                        stage_score = 0
                         load_stage(current_stage)
                         game_state = "playing"
                     elif event.key == pygame.K_1: selected_char = "walace"
