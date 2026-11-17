@@ -228,7 +228,6 @@ def main():
     game_state = "menu"
 
     def load_stage(stage_num):
-        nonlocal enemies, items
         enemies.clear()
         items.clear()
         difficulty = 1.0 + (stage_num - 1) * 0.35
